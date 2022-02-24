@@ -46,5 +46,5 @@ jobs:
         with:
           name: choco
           path: |
-            Assets/Choco/MSEdgeRedirect/msedgeredirect.${{ steps.version.outputs.nuget }}.nupkg
+            Assets/Choco/MSEdgeRedirect/msedgeredirect.nupkg
           if-no-files-found: error
