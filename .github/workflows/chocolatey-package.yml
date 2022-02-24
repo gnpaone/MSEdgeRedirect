@@ -42,7 +42,9 @@ jobs:
         with:
           args: pack Assets/Choco/MSEdgeRedirect/msedgeredirect.nuspec --outputdirectory Assets/Choco/MSEdgeRedirect
       - name: Release
-        uses: crazy-max/ghaction-chocolatey@v1
+        uses: actions/upload-artifact@v2
         with:
-          files: |
+          name: choco
+          path: |
             Assets/Choco/MSEdgeRedirect/msedgeredirect.${{ steps.version.outputs.nuget }}.nupkg
+          if-no-files-found: error
