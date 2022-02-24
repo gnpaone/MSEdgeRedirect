@@ -13,7 +13,7 @@ jobs:
   chocolatey:
     name: Deploy
     runs-on: windows-latest
-    if: github.repository == 'rcmaehl/MSEdgeRedirect'
+    if: github.repository == 'gnpaone/MSEdgeRedirect'
     steps:
       - name: Clone Repository
         uses: actions/checkout@v2
