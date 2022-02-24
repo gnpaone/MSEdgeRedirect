@@ -42,11 +42,21 @@ Func RunInstall(ByRef $aConfig, ByRef $aSettings)
 	SetOptionsRegistry("Weather", $aSettings[$sWeather], $aConfig[$vMode], $aConfig[$bManaged])
 
 	If $aConfig[$vMode] Then
-		FileCopy(@ScriptFullPath, "C:\Program Files\MSEdgeRedirect\MSEdgeRedirect.exe", $FC_CREATEPATH+$FC_OVERWRITE)
+		If Not FileCopy(@ScriptFullPath, "C:\Program Files\MSEdgeRedirect\MSEdgeRedirect.exe", $FC_CREATEPATH+$FC_OVERWRITE) Then
+			FileWrite($hLogs[$AppFailures], _NowCalc() & " - [CRITICAL] Unable to copy application to 'C:\Program Files\MSEdgeRedirect\MSEdgeRedirect.exe'" & @CRLF)
+			Exit 29 ; ERROR_WRITE_FAULT
+		EndIf
 	Else
 		If $aSettings[$bNoTray] Then $sArgs = "/hide"
-		FileCopy(@ScriptFullPath, @LocalAppDataDir & "\MSEdgeRedirect\MSEdgeRedirect.exe", $FC_CREATEPATH+$FC_OVERWRITE)
-		If $aSettings[$bStartup] Then FileCreateShortcut(@LocalAppDataDir & "\MSEdgeRedirect\MSEdgeRedirect.exe", @StartupDir & "\MSEdgeRedirect.lnk", @LocalAppDataDir & "\MSEdgeRedirect\", $sArgs)
+		If Not FileCopy(@ScriptFullPath, @LocalAppDataDir & "\MSEdgeRedirect\MSEdgeRedirect.exe", $FC_CREATEPATH+$FC_OVERWRITE) Then
+			FileWrite($hLogs[$AppFailures], _NowCalc() & " - [CRITICAL] Unable to copy application to '" & @LocalAppDataDir & "\MSEdgeRedirect\MSEdgeRedirect.exe'" & @CRLF)
+			Exit 29 ; ERROR_WRITE_FAULT
+		EndIf
+		If $aSettings[$bStartup] Then
+			If Not FileCreateShortcut(@LocalAppDataDir & "\MSEdgeRedirect\MSEdgeRedirect.exe", @StartupDir & "\MSEdgeRedirect.lnk", @LocalAppDataDir & "\MSEdgeRedirect\", $sArgs) Then
+				FileWrite($hLogs[$AppFailures], _NowCalc() & " - [WARNING] Unable to create application link in '" & @StartupDir & "\MSEdgeRedirect.lnk'" & @CRLF)
+			EndIf
+		EndIf
 	EndIf
 
 EndFunc
@@ -154,22 +164,22 @@ Func RunSetup($bUpdate = False, $bSilent = False, $iPage = 0, $hSetupFile = @Scr
 	If $bSilent Then
 
 		If $bUpdate Then
-			$aSettings[$bNoApps] = _GetSettingValue("NoApps")
-			$aSettings[$bNoPDFs] = _GetSettingValue("NoPDFs")
+			$aSettings[$bNoApps] = _Bool(_GetSettingValue("NoApps"))
+			$aSettings[$bNoPDFs] = _Bool(_GetSettingValue("NoPDFs"))
 			If $aSettings[$bNoPDFs] Then $aSettings[$sPDFApp] = _GetSettingValue("PDFApp")
-			$aSettings[$bNoBing] = _GetSettingValue("NoBing")
+			$aSettings[$bNoBing] = _Bool(_GetSettingValue("NoBing"))
 			If $aSettings[$bNoBing] Then
 				$aSettings[$sSearch] = _GetSettingValue("Search")
 				$aSettings[$sSearchPath] = _GetSettingValue("SearchPath")
 			EndIf
-			$aSettings[$bNoMSN] = _GetSettingValue("NoMSN")
+			$aSettings[$bNoMSN] = _Bool(_GetSettingValue("NoMSN"))
 			If $aSettings[$bNoMSN] Then $aSettings[$sWeather] = _GetSettingValue("Weather")
 		EndIf
 
 		If $aConfig[$hFile] = "WINGET" Then
 			$aConfig[$vMode] = $bIsAdmin
 			; Bypass file checks, IniReads, use default values
-		ElseIf Not FileExists($aConfig[$hFile]) Then
+		ElseIf Not FileExists($aConfig[$hFile]) And Not $bUpdate Then
 			Exit 2 ; ERROR_FILE_NOT_FOUND
 		Else
 			$aConfig[$bManaged] = _Bool(IniRead($aConfig[$hFile], "Config", "Managed", False))
@@ -193,15 +203,16 @@ Func RunSetup($bUpdate = False, $bSilent = False, $iPage = 0, $hSetupFile = @Scr
 			$aSettings[$sStartMenu] = IniRead($aConfig[$hFile], "Settings", "StartMenu", $aSettings[$sStartMenu])
 			$aSettings[$bStartup] = _Bool(IniRead($aConfig[$hFile], "Settings", "Startup", $aSettings[$bStartup]))
 			$aSettings[$sWeather] = IniRead($aConfig[$hFile], "Settings", "Weather", $aSettings[$sSearch])
+
+			$sEdges = IniRead($aConfig[$hFile], "Settings", "Edges", "")
+			If StringInStr($sEdges, "Stable") Then $aChannels[0] = True
+			If StringInStr($sEdges, "Beta") Then $aChannels[1] = True
+			If StringInStr($sEdges, "Dev") Then $aChannels[2] = True
+			If StringInStr($sEdges, "Canary") Then $aChannels[3] = True
+
 		EndIf
 
 		If ($aConfig[$bManaged] Or $aConfig[$vMode]) And Not $bIsAdmin Then Exit 5 ; ERROR_ACCESS_DENIED
-
-		$sEdges = IniRead($aConfig[$hFile], "Settings", "Edges", "")
-		If StringInStr($sEdges, "Stable") Then $aChannels[0] = True
-		If StringInStr($sEdges, "Beta") Then $aChannels[1] = True
-		If StringInStr($sEdges, "Dev") Then $aChannels[2] = True
-		If StringInStr($sEdges, "Canary") Then $aChannels[3] = True
 
 		For $iLoop = 0 To 3 Step 1
 			If $aChannels[$iLoop] = True Then ExitLoop
@@ -811,12 +822,16 @@ Func SetOptionsRegistry($sName, $vValue, $bAllUsers, $bManaged = False)
 	Select
 		Case IsBool($vValue)
 			RegWrite($sHive & "\SOFTWARE\" & $sPolicy & "Robert Maehl Software\MSEdgeRedirect\", $sName, "REG_DWORD", $vValue)
+			If @error Then FileWrite($hLogs[$AppFailures], _NowCalc() & " - [WARNING!] Unable to write REG_DWORD Registry Key '" & $sName & "' - with value '" & $vValue & "'" & @CRLF)
 
 		Case IsString($vValue)
 			RegWrite($sHive & "\SOFTWARE\" & $sPolicy & "Robert Maehl Software\MSEdgeRedirect\", $sName, "REG_SZ", $vValue)
+			If @error Then FileWrite($hLogs[$AppFailures], _NowCalc() & " - [WARNING!] Unable to write REG_SZ Registry Key '" & $sName & "' - with value '" & $vValue & "'" & @CRLF)
 
 		Case Else
 			RegWrite($sHive & "\SOFTWARE\" & $sPolicy & "Robert Maehl Software\MSEdgeRedirect\", $sName, "REG_SZ", $vValue)
+			If @error Then FileWrite($hLogs[$AppFailures], _NowCalc() & " - [WARNING!] Unable to write REG_SZ Registry Key '" & $sName & "' - with value '" & $vValue & "'" & @CRLF)
+
 	EndSelect
 
 EndFunc
