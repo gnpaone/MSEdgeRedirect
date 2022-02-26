@@ -16,5 +16,6 @@ jobs:
           $github = Get-Content '${{ github.event_path }}' | ConvertFrom-Json
           $asset = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect[\d\.]*.exe'
           $version = $github.release.tag_name
-          iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
-          .\wingetcreate.exe update rcmaehl.MSEdgeRedirect -u $asset.browser_download_url -v $version -o manifests -t "${{ secrets.MSEdgeRedirect_PAT }}" --submit
+          echo "${version}"
+          echo "${asset}"
+          echo "${asset.browser_download_url}"
