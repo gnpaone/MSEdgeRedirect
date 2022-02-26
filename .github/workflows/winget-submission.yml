@@ -11,11 +11,17 @@ jobs:
       run:
         shell: powershell
     steps:
-      - name: Create winget PR
+      - name: winget test
+        uses: actions/upload-artifact@v2
+        with:
+          name: winget
+          path: |
+            ${{ github.event_path }}
+          if-no-files-found: error
         run: |
           $github = Get-Content '${{ github.event_path }}' | ConvertFrom-Json
           $asset = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect[\d\.]*.exe'
           $version = $github.release.tag_name
-          echo "${version}"
-          echo "${asset}"
-          echo "${asset.browser_download_url}"
+          echo $version
+          echo ${asset}
+          echo ${asset.browser_download_url}
