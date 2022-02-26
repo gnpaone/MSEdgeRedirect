@@ -18,6 +18,7 @@ jobs:
           path: |
             ${{ github.event_path }}
           if-no-files-found: error
+      - name: winget log
         run: |
           $github = Get-Content '${{ github.event_path }}' | ConvertFrom-Json
           $asset = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect[\d\.]*.exe'
