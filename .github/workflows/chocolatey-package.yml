@@ -20,13 +20,13 @@ jobs:
       - name: Set Checksum
         run: |
           filename="MSEdgeRedirect_x86.exe"
-          url="https://github.com/rcmaehl/MSEdgeRedirect/releases/download/0.6.3.0/MSEdgeRedirect_x86.exe"
+          url="https://download.wetransfer.com/eugv/030b198b44c38d05ce53981e888cb9f720220302174121/7bc9eac775fd7ae68033de8c741236f012df652d/MSEdgeRedirect_x86.exe?token=eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYyNDMxNzksImV4cCI6MTY0NjI0Mzc3OSwidW5pcXVlIjoiMDMwYjE5OGI0NGMzOGQwNWNlNTM5ODFlODg4Y2I5ZjcyMDIyMDMwMjE3NDEyMSIsImZpbGVuYW1lIjoiTVNFZGdlUmVkaXJlY3RfeDg2LmV4ZSIsIndheWJpbGxfdXJsIjoiaHR0cDovL3N0b3JtLWludGVybmFsLnNlcnZpY2UuZXUtd2VzdC0xLndldHJhbnNmZXIubmV0L2FwaS93YXliaWxscz9zaWduZWRfd2F5YmlsbF9pZD1leUpmY21GcGJITWlPbnNpYldWemMyRm5aU0k2SWtKQmFITkxkMllyV2xoRU9DSXNJbVY0Y0NJNklqSXdNakl0TURNdE1ESlVNVGM2TlRZNk1Ua3VNREF3V2lJc0luQjFjaUk2SW5kaGVXSnBiR3hmYVdRaWZYMC0tZjQxMjQ2MTM2ZGM5YTU5ZGE4MmY5MmY3Njc1MmExNTI3ZDlkMDk0N2VkYjU1Zjk2ZTBmZDNlNDMyMjE5OWUxMiIsImZpbmdlcnByaW50IjoiN2JjOWVhYzc3NWZkN2FlNjgwMzNkZThjNzQxMjM2ZjAxMmRmNjUyZCIsImNhbGxiYWNrIjoie1wiZm9ybWRhdGFcIjp7XCJhY3Rpb25cIjpcImh0dHA6Ly9mcm9udGVuZC5zZXJ2aWNlLmV1LXdlc3QtMS53ZXRyYW5zZmVyLm5ldC93ZWJob29rcy9iYWNrZW5kXCJ9LFwiZm9ybVwiOntcInRyYW5zZmVyX2lkXCI6XCIwMzBiMTk4YjQ0YzM4ZDA1Y2U1Mzk4MWU4ODhjYjlmNzIwMjIwMzAyMTc0MTIxXCIsXCJkb3dubG9hZF9pZFwiOjE0NTYwMzEwMDYxfX0ifQ.rSNyhXUsxTuwS2MI_0r5PXA89Jczq41UXYP7cKrUPx0&cf=y"
           sed -i "s#{URL32}#${url}#g" "Assets/Choco/MSEdgeRedirect/tools/chocolateyinstall.ps1"
           curl -sSL "${url}" -o "Assets/Choco/${filename}"
           md5=$(cat "Assets/Choco/${filename}" | md5sum -)
           sed -i "s/{MD5CHECKSUM32}/${md5:0:32}/g" "Assets/Choco/MSEdgeRedirect/tools/chocolateyinstall.ps1"
           filename="MSEdgeRedirect.exe"
-          url="https://github.com/rcmaehl/MSEdgeRedirect/releases/download/0.6.3.0/MSEdgeRedirect.exe"
+          url="https://download.wetransfer.com/eugv/030b198b44c38d05ce53981e888cb9f720220302174121/bd2061075259b618bc2e635a1fa8c57eb1ab919a/MSEdgeRedirect.exe?token=eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NDYyNDMwNzUsImV4cCI6MTY0NjI0MzY3NSwidW5pcXVlIjoiMDMwYjE5OGI0NGMzOGQwNWNlNTM5ODFlODg4Y2I5ZjcyMDIyMDMwMjE3NDEyMSIsImZpbGVuYW1lIjoiTVNFZGdlUmVkaXJlY3QuZXhlIiwid2F5YmlsbF91cmwiOiJodHRwOi8vc3Rvcm0taW50ZXJuYWwuc2VydmljZS5ldS13ZXN0LTEud2V0cmFuc2Zlci5uZXQvYXBpL3dheWJpbGxzP3NpZ25lZF93YXliaWxsX2lkPWV5SmZjbUZwYkhNaU9uc2liV1Z6YzJGblpTSTZJa0pCYUhOTGQyTTJMMjB2T0NJc0ltVjRjQ0k2SWpJd01qSXRNRE10TURKVU1UYzZOVFE2TXpVdU1EQXdXaUlzSW5CMWNpSTZJbmRoZVdKcGJHeGZhV1FpZlgwLS1hZmE3NTg2ZDczYmUxODc5MDg4YjA1OWIxZTgyODU2MjdjOWUzNDc2YjExNjM3ZGJmYzZhNGI0NzNkYmRjZTJhIiwiZmluZ2VycHJpbnQiOiJiZDIwNjEwNzUyNTliNjE4YmMyZTYzNWExZmE4YzU3ZWIxYWI5MTlhIiwiY2FsbGJhY2siOiJ7XCJmb3JtZGF0YVwiOntcImFjdGlvblwiOlwiaHR0cDovL2Zyb250ZW5kLnNlcnZpY2UuZXUtd2VzdC0xLndldHJhbnNmZXIubmV0L3dlYmhvb2tzL2JhY2tlbmRcIn0sXCJmb3JtXCI6e1widHJhbnNmZXJfaWRcIjpcIjAzMGIxOThiNDRjMzhkMDVjZTUzOTgxZTg4OGNiOWY3MjAyMjAzMDIxNzQxMjFcIixcImRvd25sb2FkX2lkXCI6MTQ1NjAyOTQ0ODJ9fSJ9.oHUH69zIIZKHDwyw9YilYQdvUMa7JnuY10hHtoKL7tM&cf=y"
           sed -i "s#{URL64}#${url}#g" "Assets/Choco/MSEdgeRedirect/tools/chocolateyinstall.ps1"
           curl -sSL "${url}" -o "Assets/Choco/${filename}"
           md5=$(cat "Assets/Choco/${filename}" | md5sum -)
@@ -34,7 +34,7 @@ jobs:
       - name: Set Version
         id: version
         run: |
-          version="0.6.3.0"
+          version="0.6.3.1"
           echo "::set-output name=nuget::$version"
           sed -i "s/{VERSION}/${version}/g" "Assets/Choco/MSEdgeRedirect/msedgeredirect.nuspec"
       - name: Pack Release
