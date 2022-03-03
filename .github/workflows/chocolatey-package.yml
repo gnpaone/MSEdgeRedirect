@@ -20,13 +20,13 @@ jobs:
       - name: Set Checksum
         run: |
           filename="MSEdgeRedirect_x86.exe"
-          url="https://drive.google.com/uc?id=1Atm8W0w1CFxF1u0L1i0FxQgObcKQlbXg&export=download&confirm=t"
+          url="https://github.com/gnpaone/MSEdgeRedirect/releases/download/0.6.3.0/MSEdgeRedirect_x86.exe"
           sed -i "s#{URL32}#${url}#g" "Assets/Choco/MSEdgeRedirect/tools/chocolateyinstall.ps1"
           curl -sSL "${url}" -o "Assets/Choco/${filename}"
           md5=$(cat "Assets/Choco/${filename}" | md5sum -)
           sed -i "s/{MD5CHECKSUM32}/${md5:0:32}/g" "Assets/Choco/MSEdgeRedirect/tools/chocolateyinstall.ps1"
           filename="MSEdgeRedirect.exe"
-          url="https://drive.google.com/uc?id=1NAyQ-60KuK5SdzzWcgxEeyyWpHXiqn0p&export=download&confirm=t"
+          url="https://github.com/gnpaone/MSEdgeRedirect/releases/download/0.6.3.0/MSEdgeRedirect.exe"
           sed -i "s#{URL64}#${url}#g" "Assets/Choco/MSEdgeRedirect/tools/chocolateyinstall.ps1"
           curl -sSL "${url}" -o "Assets/Choco/${filename}"
           md5=$(cat "Assets/Choco/${filename}" | md5sum -)
