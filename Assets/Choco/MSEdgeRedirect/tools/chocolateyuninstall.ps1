@@ -14,7 +14,7 @@ $uninstalled = $false
 
 if ($key.Count -eq 1) {
   $key | ForEach-Object {
-    $packageArgs['file'] = "$($_.UninstallString.Replace(' /wingetinstall', ''))"
+    $packageArgs['file'] = "$($_.UninstallString.Trim('"'))"
 
     Uninstall-ChocolateyPackage @packageArgs
   }
