@@ -24,7 +24,7 @@ jobs:
           $asset = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect_x86.exe'
           $asset64 = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect.exe'
           $version = $github.release.tag_name
-          curl https://github.com/microsoft/winget-create/releases/latest/download/wingetcreate-self-contained.exe -L -O
+          curl https://github.com/microsoft/winget-create/releases/latest/download/wingetcreate-self-contained.exe -L -O wingetcreate-self-contained.exe
           ./wingetcreate-self-contained.exe settings
           cd $env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator
           $pathToJson = "settings.json"
