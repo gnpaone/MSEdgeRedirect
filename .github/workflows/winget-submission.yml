@@ -31,10 +31,11 @@ jobs:
           $a = Get-Content $pathToJson | ConvertFrom-Json
           $a.WindowsPackageManagerRepository.owner = "gnpaone"
           $a | ConvertTo-Json | set-content $pathToJson
+          Copy-Item -Path $env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator\settings.json -Destination C:\settings.json -PassThru
       - name: Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: winget-settings
           path: |
-            $env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator\settings.json
+            C:\settings.json
           if-no-files-found: error
