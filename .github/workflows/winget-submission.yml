@@ -26,7 +26,8 @@ jobs:
           $version = $github.release.tag_name
           iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
           ./wingetcreate.exe settings
-          $pathToJson = "C:\Users\gnpaone\AppData\Local\Packages\Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe\LocalState\settings.json"
+          cd $env:LOCALAPPDATA\Packages\Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe\LocalState
+          $pathToJson = "settings.json"
           $a = Get-Content $pathToJson | ConvertFrom-Json
           $a.WindowsPackageManagerRepository.owner = "gnpaone"
           $a | ConvertTo-Json | set-content $pathToJson
