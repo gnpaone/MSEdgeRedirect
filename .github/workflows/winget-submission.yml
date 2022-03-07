@@ -21,8 +21,7 @@ jobs:
       - name: winget log
         run: |
           $github = Get-Content '${{ github.event_path }}' | ConvertFrom-Json
-          $asset = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect_x86.exe'
-          $asset64 = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect.exe'
+          $asset = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect[\d\.]*.exe'
           $version = $github.release.tag_name
           curl https://github.com/microsoft/winget-create/releases/latest/download/wingetcreate-self-contained.exe -O wingetcreate-self-contained.exe
           ./wingetcreate-self-contained.exe settings
@@ -31,7 +30,7 @@ jobs:
           $a.WindowsPackageManagerRepository.owner = "gnpaone"
           $a | ConvertTo-Json | set-content $pathToJson
           Copy-Item -Path $env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator\settings.json -Destination C:\settings.json -PassThru
-          ./wingetcreate-self-contained.exe update rcmaehl.MSEdgeRedirect --urls $asset64.browser_download_url|X64 $asset.browser_download_url|X86 -v $version -o manifests -t "${{ secrets.MSEdgeRedirect_PAT }}" --submit
+          ./wingetcreate-self-contained.exe update rcmaehl.MSEdgeRedirect -u $asset.browser_download_url -v $version -o manifests -t "${{ secrets.MSEdgeRedirect_PAT }}" --submit
       - name: Artifacts
         uses: actions/upload-artifact@v2
         with:
