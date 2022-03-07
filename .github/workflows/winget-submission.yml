@@ -20,10 +20,9 @@ jobs:
           if-no-files-found: error
       - name: winget log
         run: |
-          url="https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/MSEdgeRedirect_x86.exe"
-          url64="https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/MSEdgeRedirect.exe"
-          tag=${{ github.event.inputs.tag }}
-          version="${tag}"
+          $url="https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/MSEdgeRedirect_x86.exe"
+          $url64="https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/MSEdgeRedirect.exe"
+          $version=${{ github.event.inputs.tag }}
           curl https://github.com/microsoft/winget-create/releases/latest/download/wingetcreate-self-contained.exe -O wingetcreate-self-contained.exe
           ./wingetcreate-self-contained.exe settings
           $pathToJson = "$env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator\settings.json"
@@ -31,7 +30,7 @@ jobs:
           $a.WindowsPackageManagerRepository.owner = "gnpaone"
           $a | ConvertTo-Json | set-content $pathToJson
           Copy-Item -Path $env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator\settings.json -Destination C:\settings.json -PassThru
-          ./wingetcreate-self-contained.exe update rcmaehl.MSEdgeRedirect --urls "${url64}" "${url}" -v "${version}" -o manifests -t "${{ secrets.MSEdgeRedirect_PAT }}" --submit
+          ./wingetcreate-self-contained.exe update rcmaehl.MSEdgeRedirect --urls $url64 $url -v $version -o manifests -t "${{ secrets.MSEdgeRedirect_PAT }}" --submit
       - name: Artifacts
         uses: actions/upload-artifact@v2
         with:
