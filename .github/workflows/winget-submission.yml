@@ -24,7 +24,16 @@ jobs:
           $asset = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect_x86.exe'
           $asset64 = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect.exe'
           $version = $github.release.tag_name
-          echo $version
-          echo $asset
-          echo $asset64
-          echo $asset.browser_download_url
+          iwr https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
+          ./wingetcreate.exe settings
+          $pathToJson = "C:\Users\gnpaone\AppData\Local\Packages\Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe\LocalState\settings.json"
+          $a = Get-Content $pathToJson | ConvertFrom-Json
+          $a.WindowsPackageManagerRepository.owner = "gnpaone"
+          $a | ConvertTo-Json | set-content $pathToJson
+      - name: Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: winget-settings
+          path: |
+            C:\Users\gnpaone\AppData\Local\Packages\Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe\LocalState\settings.json
+          if-no-files-found: error
