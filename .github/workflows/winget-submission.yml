@@ -36,6 +36,5 @@ jobs:
         with:
           name: winget-settings
           path: |
-            wingetcreate.exe
             $env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator\settings.json
           if-no-files-found: error
