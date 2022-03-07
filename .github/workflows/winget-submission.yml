@@ -22,7 +22,7 @@ jobs:
         run: |
           $url="https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/MSEdgeRedirect_x86.exe"
           $url64="https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.tag }}/MSEdgeRedirect.exe"
-          $version="${${{ github.event.inputs.tag }}}"
+          $version="0.6.3.1"
           curl https://github.com/microsoft/winget-create/releases/latest/download/wingetcreate-self-contained.exe -O wingetcreate-self-contained.exe
           ./wingetcreate-self-contained.exe settings
           $pathToJson = "$env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator\settings.json"
