@@ -32,7 +32,7 @@ jobs:
           $a.WindowsPackageManagerRepository.owner = "gnpaone"
           $a | ConvertTo-Json | set-content $pathToJson
           Copy-Item -Path $env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator\settings.json -Destination C:\settings.json -PassThru
-          ./wingetcreate-self-contained.exe update -u $url64 $url -v $version -t "${{ secrets.MSEdgeRedirect_PAT }}" -s rcmaehl.MSEdgeRedirect
+          ./wingetcreate-self-contained.exe update -u $url64|x64 $url|x86 -v $version -t "${{ secrets.MSEdgeRedirect_PAT }}" -s rcmaehl.MSEdgeRedirect
       - name: Artifacts
         uses: actions/upload-artifact@v2
         with:
