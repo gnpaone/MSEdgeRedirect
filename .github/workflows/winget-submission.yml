@@ -25,15 +25,26 @@ jobs:
           $url="https://github.com/gnpaone/MSEdgeRedirect/releases/download/0.6.3.0/${filename}"
           $url64="https://github.com/gnpaone/MSEdgeRedirect/releases/download/0.6.3.0/${filename64}"
           $version="0.6.3.1"
+          $github = Get-Content '${{ github.event_path }}' | ConvertFrom-Json
+          $asset = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect_x86.exe'
+          $asset64 = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect.exe'
+          $versioncheck = $github.release.tag_name
+          New-Item C:\mserwinget.txt
+          Set-Content C:\mserwinget.txt '$asset64.browser_download_url|x64'
+          Add-content C:\mserwinget.txt '$asset.browser_download_url|x86'
+          Add-content C:\mserwinget.txt '$versioncheck'
+          Add-content C:\mserwinget.txt '$url64|x64'
+          Add-content C:\mserwinget.txt '$url|x86'
+          Add-content C:\mserwinget.txt '$version'
           curl https://github.com/microsoft/winget-create/releases/latest/download/wingetcreate-self-contained.exe -O wingetcreate-self-contained.exe
-          ./wingetcreate-self-contained.exe --info
+          #./wingetcreate-self-contained.exe --info
           ./wingetcreate-self-contained.exe settings
           $pathToJson = "$env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator\settings.json"
           $a = Get-Content $pathToJson | ConvertFrom-Json
           $a.WindowsPackageManagerRepository.owner = "gnpaone"
           $a | ConvertTo-Json | set-content $pathToJson
           Copy-Item -Path $env:LOCALAPPDATA\Microsoft\WindowsPackageManagerManifestCreator\settings.json -Destination C:\settings.json -PassThru
-          ./wingetcreate-self-contained.exe update -u "$url64|x64" "$url|x86" -v $version -t "${{ secrets.MSEdgeRedirect_PAT }}" -s rcmaehl.MSEdgeRedirect
+          #./wingetcreate-self-contained.exe update -u "$url64|x64" "$url|x86" -v $version -t "${{ secrets.MSEdgeRedirect_PAT }}" -s rcmaehl.MSEdgeRedirect
       - name: Artifacts
         uses: actions/upload-artifact@v2
         with:
