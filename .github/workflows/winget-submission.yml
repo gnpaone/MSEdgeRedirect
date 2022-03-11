@@ -21,7 +21,7 @@ jobs:
       - name: winget log
         run: |
           $filename="MSEdgeRedirect_x86.exe"
-          $filenam64="MSEdgeRedirect.exe"
+          $filename64="MSEdgeRedirect.exe"
           $url="https://github.com/gnpaone/MSEdgeRedirect/releases/download/0.6.3.0/${$filename}"
           $url64="https://github.com/gnpaone/MSEdgeRedirect/releases/download/0.6.3.0/${$filename64}"
           $version="0.6.3.1"
