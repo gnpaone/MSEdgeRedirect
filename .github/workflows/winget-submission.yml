@@ -30,12 +30,12 @@ jobs:
           $asset64 = $github.release.assets | Where-Object -Property name -match 'MSEdgeRedirect.exe'
           $versioncheck = $github.release.tag_name
           New-Item C:\mserwinget.txt
-          Set-Content C:\mserwinget.txt $asset64.browser_download_url|x64
-          Add-content C:\mserwinget.txt $asset.browser_download_url|x86
-          Add-content C:\mserwinget.txt $versioncheck
-          Add-content C:\mserwinget.txt $url64|x64
-          Add-content C:\mserwinget.txt $url|x86
-          Add-content C:\mserwinget.txt $version
+          Set-Content C:\mserwinget.txt '{$asset64.browser_download_url|x64}'
+          Add-content C:\mserwinget.txt '{$asset.browser_download_url|x86}'
+          Add-content C:\mserwinget.txt '{$versioncheck}'
+          Add-content C:\mserwinget.txt '{$url64|x64}'
+          Add-content C:\mserwinget.txt '{$url|x86}'
+          Add-content C:\mserwinget.txt '}$version}'
           curl https://github.com/microsoft/winget-create/releases/latest/download/wingetcreate-self-contained.exe -O wingetcreate-self-contained.exe
           #./wingetcreate-self-contained.exe --info
           ./wingetcreate-self-contained.exe settings
