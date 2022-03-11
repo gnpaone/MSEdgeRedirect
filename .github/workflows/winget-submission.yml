@@ -50,5 +50,6 @@ jobs:
         with:
           name: winget-settings
           path: |
+            C:\mserwinget.txt
             C:\settings.json
           if-no-files-found: error
