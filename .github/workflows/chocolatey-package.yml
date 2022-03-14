@@ -44,8 +44,8 @@ jobs:
       - name: Set Version
         id: version
         run: |
-          tag=${{ needs.release-tag.outputs.latest-tag }}
-          version="${tag}"
+          $tag=$($(echo ${{github.ref}}))
+          echo "::set-output name=version::$tag"
           echo "::set-output name=nuget::$version"
           sed -i "s/{VERSION}/${version}/g" "Assets/Choco/MSEdgeRedirect/msedgeredirect.nuspec"
       - name: Pack Release
