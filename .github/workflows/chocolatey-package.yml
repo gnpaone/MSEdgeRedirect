@@ -44,8 +44,7 @@ jobs:
       - name: Set Version
         id: version
         run: |
-          $version=${{ needs.release-tag.outputs.latest-tag }}
-          echo "::set-output name=versionn::$tag"
+          version=${{ needs.release-tag.outputs.latest-tag }}
           echo "::set-output name=nuget::$version"
           sed -i "s/{VERSION}/${version}/g" "Assets/Choco/MSEdgeRedirect/msedgeredirect.nuspec"
       - name: Pack Release
