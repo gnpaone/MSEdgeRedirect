@@ -31,10 +31,12 @@ jobs:
           curl -sSL "${url}" -o "Assets/Choco/${filename}"
           md5=$(cat "Assets/Choco/${filename}" | md5sum -)
           sed -i "s/{MD5CHECKSUM64}/${md5:0:32}/g" "Assets/Choco/MSEdgeRedirect/tools/chocolateyinstall.ps1"
+      - uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
       - name: Set Version
         id: version
         run: |
-          version="0.6.3.1"
+          version=${{ steps.get-latest-tag.outputs.tag }}
           echo "::set-output name=nuget::$version"
           sed -i "s/{VERSION}/${version}/g" "Assets/Choco/MSEdgeRedirect/msedgeredirect.nuspec"
       - name: Pack Release
