@@ -13,11 +13,13 @@ jobs:
   release-tag:
     runs-on: ubuntu-latest
     outputs:
-      latest-tag: ${{ steps.previoustag.outputs.tag }}
+      latest-tag: ${{ steps.latesttag.outputs.tag }}
     steps:
-      - name: Get previous tag
-        id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      - uses: oprypin/find-latest-tag@v1
+        with:
+          repository: rcmaehl/MSEdgeRedirect  # The repository to scan.
+          releases-only: true  # We know that all relevant tags have a GitHub release for them.
+        id: latesttag
   chocolatey:
     name: Deploy
     runs-on: windows-latest
