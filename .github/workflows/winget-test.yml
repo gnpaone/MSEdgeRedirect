@@ -1,0 +1,23 @@
+name: Submit MSEdgeRedirect to winget
+
+on:
+  workflow_dispatch:
+
+jobs:
+  winget-bump:
+    name: mser winget
+    runs-on: windows-2019
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - name: Winget
+        uses: gnpaone/winget-push-test@v1
+        with:
+          url32: https://github.com/gnpaone/MSEdgeRedirect/releases/download/0.6.3.0/MSEdgeRedirect_x86.exe #Package url (32-bit)
+          url64: https://github.com/gnpaone/MSEdgeRedirect/releases/download/0.6.3.0/MSEdgeRedirect.exe #Package url (64-bit)
+          version: 0.6.3.1 #Package version
+          token: ${{ secrets.GITHUB_TOKEN }} #Token used to submit to Winget repository
+          packageid: rcmaehl.MSEdgeRedirect #Package ID
+          user: gnpaone #Github username where test winget repo exists
+          repo: winget-pkgs #Name of winget test repo
