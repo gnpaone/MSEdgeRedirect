@@ -6,7 +6,7 @@ on:
 jobs:
   winget-bump:
     name: mser winget
-    runs-on: windows-2019
+    runs-on: windows-latest
     defaults:
       run:
         shell: powershell
